@@ -1,0 +1,58 @@
+name: Deploy Vue application to GitHub Pages
+
+on:
+  # mainブランチにpushされた時のみこのワークフローを実行します
+  # デフォルトブランチが 'master' の場合は変更してください
+  push:
+    branches: ['main']
+
+# GitHub Pagesへのデプロイに必要な権限を設定します
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行の制御設定です
+# 古いビルドが進行中の場合はキャンセルし、最新のpushを優先します
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  # ビルドジョブ
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        # Vue(Vite)プロジェクトをビルドし、静的ファイルを生成します
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Viteのデフォルトの出力先ディレクトリは 'dist' です
+          path: './dist'
+
+  # デプロイジョブ
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
