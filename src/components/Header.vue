@@ -12,6 +12,7 @@
           <BDropdownItem to="/booth/orderHistory">注文履歴</BDropdownItem>
           <BDropdownItem to="/booth/orderCsvImport">受注CSV取込</BDropdownItem>
         </BNavItemDropdown> -->
+        <BNavItem to="/inquiry">お問い合わせ</BNavItem>
       </BNavbarNav>
       <BNavbarNav class="ms-auto mb-2 mb-lg-0"> </BNavbarNav>
     </BCollapse>

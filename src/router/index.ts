@@ -18,6 +18,11 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/inquiry',
+      name: 'inquiry',
+      component: () => import('@/views/Inquiry.vue'),
+    },
   ],
 })
 

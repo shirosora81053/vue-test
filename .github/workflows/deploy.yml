@@ -1,25 +1,20 @@
-name: Deploy Vue application to GitHub Pages
+name: Deploy Vue to GitHub Pages
 
 on:
-  # mainブランチにpushされた時のみこのワークフローを実行します
-  # デフォルトブランチが 'master' の場合は変更してください
   push:
-    branches: ['main']
+    branches:
+      - main
 
-# GitHub Pagesへのデプロイに必要な権限を設定します
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 同時実行の制御設定です
-# 古いビルドが進行中の場合はキャンセルし、最新のpushを優先します
 concurrency:
   group: 'pages'
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  # ビルドジョブ
   build:
     runs-on: ubuntu-latest
     steps:
@@ -36,16 +31,16 @@ jobs:
         run: npm ci
 
       - name: Build project
-        # Vue(Vite)プロジェクトをビルドし、静的ファイルを生成します
         run: npm run build
+        # GitHub Secretsに設定したURLをビルド時の環境変数として注入
+        env:
+          VITE_DISCORD_WEBHOOK_URL: ${{ secrets.VITE_DISCORD_WEBHOOK_URL }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Viteのデフォルトの出力先ディレクトリは 'dist' です
-          path: './dist'
+          path: ./dist
 
-  # デプロイジョブ
   deploy:
     environment:
       name: github-pages

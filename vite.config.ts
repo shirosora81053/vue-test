@@ -8,7 +8,7 @@ import { BootstrapVueNextResolver } from 'bootstrap-vue-next/resolvers'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/vue-test/',
+  base: process.env.NODE_ENV === 'production' ? '/vue-test/' : '/',
   plugins: [
     vue(),
     vueDevTools(),
