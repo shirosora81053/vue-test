@@ -1,4 +1,5 @@
 <template>
+  <Header class="mb-3" />
   <div class="contact-container">
     <h1>お問い合わせ</h1>
     <form @submit.prevent="submitForm">
@@ -25,8 +26,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { ref, reactive } from 'vue';
+  import Header from '@/components/Header.vue';
 
   // フォームデータの状態管理
   const formData = reactive({
